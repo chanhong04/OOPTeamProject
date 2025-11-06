@@ -9,4 +9,8 @@ public class Review {
 	int rating;
 	String content;
 	Date writtenDate;
+	
+	boolean matches(String kwd) {
+		return true;
+	}
 }

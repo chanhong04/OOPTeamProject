@@ -8,7 +8,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import model.MainApp;
-
+/*
+ * 로그인
+ */
 public class GUIMain {
 	private static GUIMain main = null;
 	private GUIMain() {}
