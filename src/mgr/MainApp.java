@@ -1,4 +1,4 @@
-package model;
+package mgr;
 
 public class MainApp {
 	private static MainApp app = null;
@@ -13,11 +13,16 @@ public class MainApp {
 		return app;
 	}
 	
+	static UserManager userManager = UserManager.getInstance();
+	
+	public void run() {
+		userManager.readAll("users.txt");
+		userManager.printAll();
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
-	}
-	public void run() {
-		
+		MainApp app = new MainApp();
+		app.run();
 	}
 }
