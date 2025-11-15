@@ -1,10 +1,8 @@
-package mgr;
+package model;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import model.User;
 
 public class UserManager {
 	private static UserManager mgr = null;
@@ -19,7 +17,7 @@ public class UserManager {
 	
 	boolean addUser(String userId, String password,
 			String nickName,String role) {
-		User user = new User("abc","abc","abc","abc");
+		User user = new User(userId,password,nickName,role);
 		userList.add(user);
 		return true;
 	}

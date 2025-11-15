@@ -1,9 +1,7 @@
-package mgr;
+package model;
 
 import java.util.ArrayList;
 import java.util.Date;
-
-import model.Review;
 
 public class ReviewManager {
 	ArrayList<Review> reviewList = new ArrayList();

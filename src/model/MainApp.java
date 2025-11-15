@@ -1,4 +1,4 @@
-package mgr;
+package model;
 
 public class MainApp {
 	private static MainApp app = null;

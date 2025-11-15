@@ -2,7 +2,9 @@ package model;
 
 import java.util.Scanner;
 
-public class User {
+import mgr.Manageable;
+
+public class User implements Manageable {
 	String userId;
 	String password;
 	String nickName;
@@ -23,10 +25,17 @@ public class User {
 		role = scan.next();
 		warningCount = scan.nextInt();
 	}
+	
 	public void print() {
 		System.out.format("[%s] (경고%d회) ", userId, warningCount);
 		System.out.println();
 	}
-
+	
+	public boolean matches(String kwd) {
+		return true;
+	}
+	
 	void checkPassword(String pw) {}
+	
+	
 }

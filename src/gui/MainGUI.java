@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.text.JTextComponent;
 
-import mgr.MainApp;
+import model.MainApp;
 
 import java.awt.*;
 import java.awt.event.*;

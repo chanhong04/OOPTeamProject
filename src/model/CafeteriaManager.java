@@ -1,8 +1,6 @@
-package mgr;
+package model;
 
 import java.util.ArrayList;
-
-import model.Cafeteria;
 
 public class CafeteriaManager {
 	ArrayList <Cafeteria> cafeteriaList;

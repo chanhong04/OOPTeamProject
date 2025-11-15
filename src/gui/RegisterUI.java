@@ -7,44 +7,53 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-public class RegisterUI extends JPanel {
 
+public class RegisterUI extends JPanel {
 	private MainGUI mainGUI;
+	JLabel title;
+	JLabel idLabel;
+	JTextField idField;
+	JLabel pwLabel;
+	JPasswordField pwField;
+	JLabel nameLabel;
+	JTextField nameField;
+	JButton cancel;
+	JButton signUp;
 	
+	private final String ID_REGEX = "^[a-zA-Z][a-zA-Z0-9_-]{4,19}$";
+    private final String PW_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,20}$";
+    private final String NAME_REGEX = "^[a-zA-Z0-9가-힣_]{2,10}$";
+    
     public RegisterUI(MainGUI mainGUI) {
-    	
     	this.mainGUI = mainGUI;
     	mainGUI.mainFrame.setTitle("회원 가입");
         
         this.setLayout(null);
         this.setBackground(Color.WHITE);
 
-        // 타이틀
-        JLabel title = new JLabel("회원 가입", SwingConstants.CENTER);
+        title = new JLabel("회원 가입", SwingConstants.CENTER);
         title.setFont(new Font("Dialog", Font.BOLD, 44));
         title.setBounds(0, 110, 1600, 60);
         this.add(title);
 
-        // 아이디
-        JLabel idLabel = new JLabel("아이디");
+        idLabel = new JLabel("아이디");
         idLabel.setFont(new Font("Dialog", Font.PLAIN, 16));
         idLabel.setBounds(420, 250, 200, 24);
         this.add(idLabel);
 
-        JTextField idField = new JTextField();
+        idField = new JTextField();
         idField.setBounds(420, 282, 560, 48);
         styleInput(idField);
         idField.setText("");                      // 디자인용 플레이스홀더
         idField.setForeground(new Color(160,160,160));
         this.add(idField);
 
-        // 비밀번호
-        JLabel pwLabel = new JLabel("비밀번호");
+        pwLabel = new JLabel("비밀번호");
         pwLabel.setFont(new Font("Dialog", Font.PLAIN, 16));
         pwLabel.setBounds(420, 350, 200, 24);
         this.add(pwLabel);
 
-        JPasswordField pwField = new JPasswordField();
+        pwField = new JPasswordField();
         pwField.setBounds(420, 382, 560, 48);
         styleInput(pwField);
         pwField.setText("");                      // 디자인용 플레이스홀더
@@ -52,22 +61,19 @@ public class RegisterUI extends JPanel {
         pwField.setEchoChar((char)0);                  // 디자인용(보이게)
         this.add(pwField);
         
-        // 이름
-        JLabel nameLabel = new JLabel("이름");
+        nameLabel = new JLabel("이름");
         nameLabel.setFont(new Font("Dialog", Font.PLAIN, 16));
         nameLabel.setBounds(420, 450, 200, 24);
         this.add(nameLabel);
 
-        JTextField nameField = new JTextField();
+        nameField = new JTextField();
         nameField.setBounds(420, 482, 560, 48);
         styleInput(nameField);
         nameField.setText("");                      // 디자인용 플레이스홀더
         nameField.setForeground(new Color(160,160,160)); 
         this.add(nameField);
-        
 
-        // 하단 버튼 영역
-        JButton cancel = new JButton("Cancel");
+        cancel = new JButton("Cancel");
         cancel.setBounds(420, 660, 120, 44);
         cancel.setBorderPainted(false);
         cancel.setFocusPainted(false);
@@ -75,7 +81,7 @@ public class RegisterUI extends JPanel {
         cancel.setFont(new Font("Dialog", Font.PLAIN, 16));
         this.add(cancel);
 
-        JButton signUp = new RoundedButton("Sign up", 14);
+        signUp = new RoundedButton("Sign up", 14);
         signUp.setBounds(420 + 560 - 180, 656, 180, 50); // 입력창 오른쪽 정렬
         signUp.setBackground(new Color(45,45,45));
         signUp.setForeground(Color.WHITE);
@@ -84,7 +90,6 @@ public class RegisterUI extends JPanel {
         signUp.setBorder(BorderFactory.createEmptyBorder(10,20,10,20));
         this.add(signUp);
 
-        // 동작 (기존 흐름 유지)
         MenuListener listener = new MenuListener();
         cancel.addActionListener(listener);
         signUp.addActionListener(listener);
@@ -101,7 +106,6 @@ public class RegisterUI extends JPanel {
         field.setBorder(new CompoundBorder(outer, inner));
     }
 
-    // 라운드 버튼
     static class RoundedButton extends JButton {
         private final int radius;
         RoundedButton(String text, int radius) {
@@ -119,8 +123,7 @@ public class RegisterUI extends JPanel {
         }
         @Override public boolean isOpaque() { return false; }
     }
-
-    // 버튼 동작 (Cancel/Sign up)
+    
     class MenuListener implements ActionListener {
         @Override public void actionPerformed(ActionEvent e) {
             String cmd = e.getActionCommand();
@@ -129,19 +132,40 @@ public class RegisterUI extends JPanel {
                     mainGUI.showScreen("LOGIN");
                     break;
                 case "Sign up":
-                    showSignUpSuccess();
+                	String id = idField.getText();
+                	String name = nameField.getText();
+                	String pw = new String(pwField.getPassword());
+                	
+                	String errorMsg = validateForm(id,name,pw);
+                	
+                	if(errorMsg == null)
+                		showSignUpSuccess();
+                	else
+                		showErrorMsg(errorMsg);
                     break;
             }
         }
     }
-
-    // 가입 성공(중앙 표시)
+    
+    private String validateForm(String id, String name, String pw) {
+    	if(id.matches(ID_REGEX) == false) {
+    		return "아이디 형식이 올바르지 않습니다. (영문/숫자, 5~20자)";
+    	}
+    	if(pw.matches(PW_REGEX) == false) {
+    		return "비밀번호 형식이 올바르지 않습니다. (영문/숫자/특수문자 조합, 8자 이상)";
+    	}
+    	if(name.matches(NAME_REGEX) == false) {
+    		return "이름(닉네임) 형식이 올바르지 않습니다. (한글/영문/숫자, 2~10자)";
+    	}
+    	return null;
+    }
+    
     private void showSignUpSuccess() {
         JDialog signUpDlg = new JDialog(mainGUI.mainFrame, "회원가입", true);
         signUpDlg.setLayout(new BorderLayout(10,10));
         signUpDlg.setSize(360, 160);
         signUpDlg.setLocationRelativeTo(this);
-        //디자인
+
         JLabel msg = new JLabel("회원가입 성공!", SwingConstants.CENTER);
         msg.setFont(new Font("Dialog", Font.BOLD, 18));
         signUpDlg.add(msg, BorderLayout.CENTER);
@@ -154,12 +178,14 @@ public class RegisterUI extends JPanel {
             mainGUI.showScreen("LOGIN");
             }
         );
-         //람다식
-        
         btnPanel.add(ok);
         signUpDlg.add(btnPanel, BorderLayout.SOUTH);
 
         signUpDlg.setVisible(true);
       
-        }
+    }
+    // 이 부분 완성해주셨으면 합니다.
+    private void showErrorMsg(String errorMsg) {
+    	
+    }
 }

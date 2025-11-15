@@ -119,8 +119,6 @@ public class LoginUI extends JPanel {
         @Override public boolean isOpaque() { return false; }
     }
 
-    
-
     // UI 변경 동작
     class ButtonListener implements ActionListener{
         @Override
