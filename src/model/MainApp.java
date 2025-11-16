@@ -14,10 +14,12 @@ public class MainApp {
 	}
 	
 	static UserManager userManager = UserManager.getInstance();
-	
+	static ReviewManager reviewMgr =  ReviewManager.getInstance();
 	public void run() {
 		userManager.readAll("users.txt");
 		userManager.printAll();
+		reviewMgr.readReviews("reviews.txt");
+		reviewMgr.displayReviews();
 	}
 	
 	public static void main(String[] args) {
