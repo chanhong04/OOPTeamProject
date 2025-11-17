@@ -33,7 +33,7 @@ public abstract class DataEngineImpl<T extends Manageable> extends Manager<T> im
 	public void update(String[] editTexts) {
 		// TODO Auto-generated method stub
 		Manageable s = find(editTexts[0]);
-		//((UIData) s).set(editTexts);
+		((UIData) s).set(editTexts);
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class UserManager {
+public class UserManager extends DataEngineImpl<User> {
 	private static UserManager mgr = null;
 	
 	ArrayList<User> userList = new ArrayList();
