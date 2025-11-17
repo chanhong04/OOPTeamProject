@@ -13,13 +13,17 @@ public class MainApp {
 		return app;
 	}
 	
+	static CafeteriaManager cafeteriaManager = CafeteriaManager.getInstance();
 	static UserManager userManager = UserManager.getInstance();
 	static ReviewManager reviewMgr =  ReviewManager.getInstance();
+	
 	public void run() {
 		userManager.readAll("users.txt");
 		userManager.printAll();
 		reviewMgr.readReviews("reviews.txt");
 		reviewMgr.displayReviews();
+		cafeteriaManager.readCafeterias("cafeterias.txt");
+		cafeteriaManager.readMenus("menus.txt");
 	}
 	
 	public static void main(String[] args) {
