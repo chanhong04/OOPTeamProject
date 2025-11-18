@@ -5,96 +5,92 @@ import javax.swing.border.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.io.*;
 
 public class RegisterUI extends JPanel {
-	private MainGUI mainGUI;
-	JLabel title;
-	JLabel idLabel;
-	JTextField idField;
-	JLabel pwLabel;
-	JPasswordField pwField;
-	JLabel nameLabel;
-	JTextField nameField;
-	JButton cancel;
-	JButton signUp;
-	
-	private final String ID_REGEX = "^[a-zA-Z][a-zA-Z0-9_-]{4,19}$";
-    private final String PW_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,20}$";
-    private final String NAME_REGEX = "^[a-zA-Z0-9가-힣_]{2,10}$";
-    
-    public RegisterUI(MainGUI mainGUI) {
-    	this.mainGUI = mainGUI;
-    	mainGUI.mainFrame.setTitle("회원 가입");
-        
-        this.setLayout(null);
-        this.setBackground(Color.WHITE);
 
-        title = new JLabel("회원 가입", SwingConstants.CENTER);
+    // 카드레이아웃 전환용
+    private MainGUI mainGUI;
+
+    // 가입 정보 필드
+    private JTextField idField;
+    private JPasswordField pwField;
+    private JTextField nameField;
+
+    public RegisterUI(MainGUI mainGUI) {
+        this.mainGUI = mainGUI;
+
+        setLayout(null);
+        setBackground(Color.WHITE);
+
+        // 타이틀
+        JLabel title = new JLabel("회원 가입", SwingConstants.CENTER);
         title.setFont(new Font("Dialog", Font.BOLD, 44));
         title.setBounds(0, 110, 1600, 60);
-        this.add(title);
+        add(title);
 
-        idLabel = new JLabel("아이디");
+        // 아이디
+        JLabel idLabel = new JLabel("아이디");
         idLabel.setFont(new Font("Dialog", Font.PLAIN, 16));
         idLabel.setBounds(420, 250, 200, 24);
-        this.add(idLabel);
+        add(idLabel);
 
         idField = new JTextField();
         idField.setBounds(420, 282, 560, 48);
         styleInput(idField);
-        idField.setText("");                      // 디자인용 플레이스홀더
+        idField.setText("");
         idField.setForeground(new Color(160,160,160));
-        this.add(idField);
+        add(idField);
 
-        pwLabel = new JLabel("비밀번호");
+        // 비밀번호
+        JLabel pwLabel = new JLabel("비밀번호");
         pwLabel.setFont(new Font("Dialog", Font.PLAIN, 16));
         pwLabel.setBounds(420, 350, 200, 24);
-        this.add(pwLabel);
+        add(pwLabel);
 
         pwField = new JPasswordField();
         pwField.setBounds(420, 382, 560, 48);
         styleInput(pwField);
-        pwField.setText("");                      // 디자인용 플레이스홀더
+        pwField.setText("");
         pwField.setForeground(new Color(160,160,160));
-        pwField.setEchoChar((char)0);                  // 디자인용(보이게)
-        this.add(pwField);
-        
-        nameLabel = new JLabel("이름");
+        pwField.setEchoChar((char)0);   // 디자인용(보이게)
+        add(pwField);
+
+        // 이름
+        JLabel nameLabel = new JLabel("이름");
         nameLabel.setFont(new Font("Dialog", Font.PLAIN, 16));
         nameLabel.setBounds(420, 450, 200, 24);
-        this.add(nameLabel);
+        add(nameLabel);
 
         nameField = new JTextField();
         nameField.setBounds(420, 482, 560, 48);
         styleInput(nameField);
-        nameField.setText("");                      // 디자인용 플레이스홀더
-        nameField.setForeground(new Color(160,160,160)); 
-        this.add(nameField);
+        nameField.setText("");
+        nameField.setForeground(new Color(160,160,160));
+        add(nameField);
 
-        cancel = new JButton("Cancel");
+        // 하단 버튼 영역
+        JButton cancel = new JButton("Cancel");
         cancel.setBounds(420, 660, 120, 44);
         cancel.setBorderPainted(false);
         cancel.setFocusPainted(false);
         cancel.setContentAreaFilled(false);
         cancel.setFont(new Font("Dialog", Font.PLAIN, 16));
-        this.add(cancel);
+        add(cancel);
 
-        signUp = new RoundedButton("Sign up", 14);
+        JButton signUp = new RoundedButton("Sign up", 14);
         signUp.setBounds(420 + 560 - 180, 656, 180, 50); // 입력창 오른쪽 정렬
         signUp.setBackground(new Color(45,45,45));
         signUp.setForeground(Color.WHITE);
         signUp.setFont(new Font("Dialog", Font.PLAIN, 18));
         signUp.setFocusPainted(false);
         signUp.setBorder(BorderFactory.createEmptyBorder(10,20,10,20));
-        this.add(signUp);
+        add(signUp);
 
+        // 동작 연결
         MenuListener listener = new MenuListener();
         cancel.addActionListener(listener);
         signUp.addActionListener(listener);
- 
-        setVisible(true);
     }
 
     private void styleInput(JTextComponent field) {
@@ -106,6 +102,7 @@ public class RegisterUI extends JPanel {
         field.setBorder(new CompoundBorder(outer, inner));
     }
 
+    // 라운드 버튼
     static class RoundedButton extends JButton {
         private final int radius;
         RoundedButton(String text, int radius) {
@@ -123,69 +120,76 @@ public class RegisterUI extends JPanel {
         }
         @Override public boolean isOpaque() { return false; }
     }
-    
+
+    // 버튼 동작 (Cancel / Sign up)
     class MenuListener implements ActionListener {
         @Override public void actionPerformed(ActionEvent e) {
             String cmd = e.getActionCommand();
             switch (cmd) {
                 case "Cancel":
+                    // JFrame 새로 만들지 말고 로그인 화면으로 카드 전환
                     mainGUI.showScreen("LOGIN");
                     break;
                 case "Sign up":
-                	String id = idField.getText();
-                	String name = nameField.getText();
-                	String pw = new String(pwField.getPassword());
-                	
-                	String errorMsg = validateForm(id,name,pw);
-                	
-                	if(errorMsg == null)
-                		showSignUpSuccess();
-                	else
-                		showErrorMsg(errorMsg);
+                    handleSignUp();
                     break;
             }
         }
     }
-    
-    private String validateForm(String id, String name, String pw) {
-    	if(id.matches(ID_REGEX) == false) {
-    		return "아이디 형식이 올바르지 않습니다. (영문/숫자, 5~20자)";
-    	}
-    	if(pw.matches(PW_REGEX) == false) {
-    		return "비밀번호 형식이 올바르지 않습니다. (영문/숫자/특수문자 조합, 8자 이상)";
-    	}
-    	if(name.matches(NAME_REGEX) == false) {
-    		return "이름(닉네임) 형식이 올바르지 않습니다. (한글/영문/숫자, 2~10자)";
-    	}
-    	return null;
+
+    // 회원가입 처리 + users.txt 저장
+    private void handleSignUp() {
+        String id = idField.getText().trim();
+        String pw = new String(pwField.getPassword());
+        String name = nameField.getText().trim();
+
+        if (id.isEmpty() || pw.isEmpty() || name.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "아이디, 비밀번호, 이름을 모두 입력해주세요.",
+                    "입력 오류",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        // 권한, 레벨은 고정: user 0
+        String role = "user";
+        String level = "0";
+
+        File file = new File("users.txt"); // 실행 위치 기준
+
+        try (FileWriter fw = new FileWriter(file, true);
+             BufferedWriter bw = new BufferedWriter(fw);
+             PrintWriter out = new PrintWriter(bw)) {
+
+            // 한 줄 추가: 아이디 비밀번호 이름 user 0
+            out.printf("\n%s\t%s\t%s\t%s\t%s%n", id, pw, name, role, level);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "회원정보 저장 중 오류가 발생했습니다.",
+                    "파일 오류",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        // 저장이 정상적으로 끝났으면 성공 창 띄우기
+        showSignUpSuccess();
     }
-    
+
+    // 가입 성공(중앙 표시 후 로그인 화면으로 이동)
     private void showSignUpSuccess() {
-        JDialog signUpDlg = new JDialog(mainGUI.mainFrame, "회원가입", true);
-        signUpDlg.setLayout(new BorderLayout(10,10));
-        signUpDlg.setSize(360, 160);
-        signUpDlg.setLocationRelativeTo(this);
-
-        JLabel msg = new JLabel("회원가입 성공!", SwingConstants.CENTER);
-        msg.setFont(new Font("Dialog", Font.BOLD, 18));
-        signUpDlg.add(msg, BorderLayout.CENTER);
-
-        JPanel btnPanel = new JPanel();
-        JButton ok = new JButton("OK");
-        	           
-        ok.addActionListener(ev -> {
-            signUpDlg.dispose();
-            mainGUI.showScreen("LOGIN");
-            }
+        JOptionPane.showMessageDialog(
+                this,
+                "회원가입 성공!",
+                "회원가입",
+                JOptionPane.INFORMATION_MESSAGE
         );
-        btnPanel.add(ok);
-        signUpDlg.add(btnPanel, BorderLayout.SOUTH);
-
-        signUpDlg.setVisible(true);
-      
-    }
-    // 이 부분 완성해주셨으면 합니다.
-    private void showErrorMsg(String errorMsg) {
-    	
+        // OK 누르면 로그인 화면으로
+        mainGUI.showScreen("LOGIN");
     }
 }

@@ -29,8 +29,10 @@ public class MainApp {
 		userManager.printAll();
 		reviewMgr.readReviews("reviews.txt");
 		reviewMgr.displayReviews();
-		cafeteriaManager.readCafeterias("cafeterias.txt");
-		cafeteriaManager.readMenus("menus.txt");
+		cafeteriaManager.readAll("cafeterias.txt", new Factory<Cafeteria>() {
+			public Cafeteria create() { return new Cafeteria(); }
+		});
+		cafeteriaManager.printAll();
 	}
 	
 	public static void main(String[] args) {

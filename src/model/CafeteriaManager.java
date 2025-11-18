@@ -2,14 +2,18 @@ package model;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-public class CafeteriaManager {
+import facade.DataEngineImpl;
+import mgr.Factory;
 
-	ArrayList<Cafeteria> cafeteriaList = new ArrayList<>();
+
+public class CafeteriaManager extends DataEngineImpl<Cafeteria> {
 
 	private static CafeteriaManager instance = null;
 	private CafeteriaManager() {}
@@ -21,34 +25,33 @@ public class CafeteriaManager {
 		return instance;
 	}
 
-	public ArrayList<Cafeteria> getCafeteriaList() {
-		return cafeteriaList;
+	// mList 반환
+	public List<Cafeteria> getCafeteriaList() {
+		return mList; // cafeteriaList -> mList
 	}
 
-	public void printCafeterias() {
-		
-	}
-	public void readCafeterias(String fileName) {
-		cafeteriaList.clear();
-		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				if (line.isEmpty()) continue;
-
-				String[] parts = line.split("\t");
-
-				if (parts.length >= 2) {
-					String name = parts[0];
-					String location = parts[1];
-					cafeteriaList.add(new Cafeteria(name, location));
-				}
-			}
-		} catch (IOException e) {
-			System.err.println("Cafeteria 파일 로드 중 오류: " + e.getMessage());
+	@Override
+	public Scanner openFile(String filename) {
+		Scanner filein = null;
+		try {
+			filein = new Scanner(new File(filename));
+		} catch (Exception e) {
+			System.out.println(filename + ": 파일 없음");
+			System.exit(0);
 		}
+		if (filein != null) {
+			filein.useDelimiter("\t|\r\n|\n");
+		}
+		return filein;
 	}
 
-	public void readMenus(String fileName) {
+	@Override
+	public void readAll(String fileName, Factory<Cafeteria> fac) {
+		super.readAll(fileName, fac);
+		this.readMenus("menus.txt");
+	}
+
+	private void readMenus(String fileName) {
 		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
 			String line;
 			while ((line = br.readLine()) != null) {
@@ -58,8 +61,7 @@ public class CafeteriaManager {
 
 				if (parts.length >= 5) {
 					String cafeteriaName = parts[0];
-
-					Cafeteria targetCafeteria = findCafeterias(cafeteriaName);
+					Cafeteria targetCafeteria = findCafeterias(cafeteriaName); // mList 사용
 
 					if (targetCafeteria != null) {
 						String name = parts[1];
@@ -68,7 +70,6 @@ public class CafeteriaManager {
 						String imagePath = parts[4];
 
 						Menu menu = new Menu(name, price, description, imagePath);
-
 						targetCafeteria.createMenu(menu);
 					} else {
 						System.err.println("경고: 메뉴의 가게이름 '" + cafeteriaName + "'을(를) cafeterias.txt에서 찾을 수 없습니다.");
@@ -84,7 +85,7 @@ public class CafeteriaManager {
 
 	public void saveCafeterias(String fileName) {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
-			for (Cafeteria c : cafeteriaList) {
+			for (Cafeteria c : mList) { // cafeteriaList -> mList
 				bw.write(c.getName() + "\t" + c.getLocation());
 				bw.newLine();
 			}
@@ -95,7 +96,7 @@ public class CafeteriaManager {
 
 	public void saveMenus(String fileName) {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
-			for (Cafeteria c : cafeteriaList) {
+			for (Cafeteria c : mList) { // cafeteriaList -> mList
 				String cafeteriaName = c.getName();
 
 				for (Menu m : c.readMenus()) {
@@ -116,11 +117,17 @@ public class CafeteriaManager {
 	}
 
 	public Cafeteria findCafeterias(String name) {
-		for (Cafeteria c : cafeteriaList) {
+		for (Cafeteria c : mList) { // cafeteriaList -> mList
 			if (c.getName().equals(name)) {
 				return c;
 			}
 		}
 		return null;
+	}
+
+
+	@Override
+	public void addNewRow(String[] uiTexts) {
+		// Cafeteria는 아직 GUI에서 직접 추가하는 기능이 없으므로 비워둠
 	}
 }
