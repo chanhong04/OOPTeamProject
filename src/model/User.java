@@ -2,9 +2,10 @@ package model;
 
 import java.util.Scanner;
 
+import facade.UIData;
 import mgr.Manageable;
 
-public class User implements Manageable {
+public class User implements Manageable, UIData {
 	String userId;
 	String password;
 	String nickName;
@@ -37,5 +38,20 @@ public class User implements Manageable {
 	
 	void checkPassword(String pw) {}
 	
-	
+	public void set(String[] uitexts) {
+		this.userId = uitexts[0];
+		this.password = uitexts[1];
+		this.nickName = uitexts[2];
+		this.role = uitexts[3];
+	};
+
+	public String[] getUiTexts() {
+		String[] texts = new String[5];
+		texts[0] = userId;
+		texts[1] = password;
+		texts[2] = nickName;
+		texts[3] = role;
+		texts[4] = String.valueOf(warningCount);
+		return texts;
+	}
 }

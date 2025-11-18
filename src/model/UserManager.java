@@ -4,7 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class UserManager {
+import facade.DataEngineImpl;
+import mgr.Factory;
+
+public class UserManager extends DataEngineImpl<User> {
 	private static UserManager mgr = null;
 	
 	ArrayList<User> userList = new ArrayList();
@@ -22,24 +25,7 @@ public class UserManager {
 		return true;
 	}
 	
-	public void readAll(String filename) {
-		Scanner filein = openFile(filename);
-		filein.useDelimiter("\t|\r\n|\n"); // 구분자를 tab, 줄바꿈으로 바꾸는 명령어
-		User m = null;
-		while (filein.hasNext()) {
-			m = new User();
-			m.read(filein);
-			userList.add(m);
-		}
-		filein.close();
-	}
-	
-	public void printAll() {
-		for(User user : userList) {
-			user.print();
-		}
-	}
-	
+	@Override
 	public Scanner openFile(String filename) {
 		Scanner filein = null;
 		try {
@@ -48,13 +34,20 @@ public class UserManager {
 			System.out.println(filename + ": 파일 없음");
 			System.exit(0);
 		}
+		if (filein != null) {
+            filein.useDelimiter("\t|\r\n|\n");
+        }
 		return filein;
 	}
-	
-	void readUsers(String fileName) {
-		
-	};
+
 	void saveUsers(String fileName) {};
 	void findUser(String userId) {};
-	void deleteUser(String userId) {};
+	void deleteUser(String userId) {}
+
+	@Override
+	public void addNewRow(String[] uiTexts) {
+		User u = new User();
+		u.set(uiTexts);
+		mList.add(u);
+	};
 }

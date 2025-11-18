@@ -1,5 +1,7 @@
 package model;
 
+import mgr.Factory;
+
 public class MainApp {
 	private static MainApp app = null;
 	
@@ -18,7 +20,12 @@ public class MainApp {
 	static ReviewManager reviewMgr =  ReviewManager.getInstance();
 	
 	public void run() {
-		userManager.readAll("users.txt");
+		
+		userManager.readAll("users.txt", new Factory<User>() {
+			public User create() {
+				return new User();
+			}
+		});
 		userManager.printAll();
 		reviewMgr.readReviews("reviews.txt");
 		reviewMgr.displayReviews();
