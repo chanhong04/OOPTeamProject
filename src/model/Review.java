@@ -1,8 +1,11 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
+import mgr.Manageable;
 
-public class Review {
+public class Review implements Manageable {
 	private String reviewID; // review 식별을 위한 고유 ID
     private String cafeteriaName; //음식점 이름
     private String menuName;  //리뷰 작성한 메뉴(주문한 메뉴 중에)
@@ -27,14 +30,63 @@ public class Review {
         this.warningNum = 0;
     }
 
+    @Override
+    public void read(Scanner scan) {
+        if (!scan.hasNextLine()) return;
+
+        String line = scan.nextLine();
+
+        String[] parts = line.split("\t");
+
+        if (parts.length < 8) {
+            System.err.println("경고: 리뷰 데이터 누락 또는 형식 오류");
+            return;
+        }
+
+        try {
+            this.reviewID = parts[0];
+            this.cafeteriaName = parts[1];
+            this.menuName = parts[2];
+            this.authorID = parts[3];
+
+            setRating(Integer.parseInt(parts[4]));
+
+            this.writtenDate = new Date(Long.parseLong(parts[5]));
+            this.warningNum = Integer.parseInt(parts[6]);
+
+            this.content = parts[7];
+
+        } catch (NumberFormatException e) {
+            System.err.println("오류: 숫자 필드 변환 실패 " );
+        }
+    }
+
+    @Override
     public void print() {
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy.MM.dd");
-        //시간은 제외하고 년월일까지만 출력하도록 했습니다.
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
         String dateStr = (writtenDate != null) ? sdf.format(writtenDate) : "N/A";
 
-        System.out.printf("[ID:%s] %s - %s (★%d, 신고:%d) | %s | 작성자:%s (%s)\n",
+        System.out.printf("[%s] %s - %s (★%d, 신고:%d) | %s | 작성자:%s (%s)\n",
                 reviewID, cafeteriaName, menuName, rating, warningNum,
                 content, authorID, dateStr);
+    }
+
+    @Override
+    public boolean matches(String kwd) {
+        if (kwd == null) return false;
+
+        // 평점 검색 (숫자일 경우)
+        if (kwd.length() == 1 && Character.isDigit(kwd.charAt(0))) {
+            if (Integer.toString(rating).equals(kwd)) return true;
+        }
+
+        // 문자열 필드 검색 (포함 여부)
+        if (menuName.contains(kwd)) return true;
+        if (cafeteriaName.contains(kwd)) return true;
+        if (content.contains(kwd)) return true;
+        if (authorID.equals(kwd)) return true; // ID는 정확히 일치할 때만
+
+        return false;
     }
 
     //메뉴별로 리뷰를 구별하여 출력하기 위한 matches 함수
