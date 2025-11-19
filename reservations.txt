@@ -1,2 +1,0 @@
-reservations.txt (예약 기록)
-정보: 예약 ID, 사용자 ID, 식당명, 메뉴명, 예약 시간

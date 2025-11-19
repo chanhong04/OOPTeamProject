@@ -1,4 +1,4 @@
-만권화밥	공기밥	1000	기본 제공 밥	plain_rice.png
+만권화밥	공기밥	1000	기본 제공 밥		plain_rice.png
 만권화밥	마라큐브스테이크	8500	얼얼한 마라 소스 큐브스테이크	mala_cube_steak.png
 만권화밥	불맛해물짬뽕	8500	불향 가득한 해물 짬뽕	seafood_jjamppong.png
 만권화밥	직화해물짜장면	7500	직화향 나는 해물 짜장면	fire_seafood_jjajang.png

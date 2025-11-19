@@ -22,7 +22,7 @@ public class LoginUI extends JPanel {
         setBackground(Color.WHITE);
 
         // 상단 타이틀
-        JLabel topText = new JLabel("학식 추천 앱이름", SwingConstants.CENTER);
+        JLabel topText = new JLabel("점심 뭐 먹지", SwingConstants.CENTER);
         topText.setFont(new Font("Dialog", Font.BOLD, 44));
         topText.setBounds(0, 90, 1600, 60);
         add(topText);
