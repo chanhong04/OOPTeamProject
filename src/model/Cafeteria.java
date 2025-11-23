@@ -110,8 +110,12 @@ public class Cafeteria implements Manageable, UIData {
 			return;
 		}
 		for(Menu m : menuList) {
-			// Menu.java의 toString()을 활용하여 출력
-			System.out.printf("  - %s (%,d원): %s\n", m.getName(), m.getPrice(), m.getDescription());
+			System.out.printf("  - %s (%,d원) [%s]: %s\n",
+					m.getName(),
+					m.getPrice(),
+					m.getCategory(),
+					m.getDescription());
+
 		}
 	}
 

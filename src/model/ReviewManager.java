@@ -10,14 +10,47 @@ import java.util.Comparator;
 import java.util.List;
 
 import mgr.Manager;
+import facade.DataEngineImpl;
 
-public class ReviewManager extends Manager<Review> {
+public class ReviewManager extends DataEngineImpl<Review> {
+
     private static ReviewManager instance = new ReviewManager();
 
-    private ReviewManager() {}
+    private static final String[] headers = {"Review ID", "식당 이름", "메뉴 이름", "평점", "리뷰 내용", "작성자 ID", "작성일"};
+
+    private ReviewManager() {
+        setLabels(headers);
+        readReviews("reviews.txt");
+    }
 
     public static ReviewManager getInstance() {
         return instance;
+    }
+
+    @Override
+    public void addNewRow(String[] uiTexts) {
+        // Review 객체 생성 및 데이터 설정
+        // ID는 Manager가 자동 생성하거나 (여기서는 임시로 timestamp 사용)
+        String newId = "R" + System.currentTimeMillis();
+
+        Review newReview = new Review();
+        newReview.setReviewID(newId);
+
+        // UIData의 set() 메서드를 활용하여 데이터 할당
+        newReview.setCafeteriaName(uiTexts[1]);
+        newReview.setMenuName(uiTexts[2]);
+        // setRating()은 int를 받으므로 변환 필요
+        try {
+            newReview.setRating(Integer.parseInt(uiTexts[3]));
+        } catch (Exception e) {
+            newReview.setRating(1); // 오류 시 기본값
+        }
+        newReview.setContent(uiTexts[4]);
+        newReview.setAuthorID(uiTexts[5]);
+        newReview.setWrittenDate(new Date()); // 작성일은 현재 시간으로 설정
+
+        //mList에 추가하고 파일 저장
+        writeReview(newReview);
     }
 
     public void readReviews(String fileName) {
@@ -117,14 +150,8 @@ public class ReviewManager extends Manager<Review> {
     }
 
     public boolean deleteReview(String reviewID) {
-        Review reviewToRemove = null;
+        Review reviewToRemove = find(reviewID);
 
-        for (Review r : mList) {
-            if (r.getReviewID().equals(reviewID)) {
-                reviewToRemove = r;
-                break;
-            }
-        }
         if (reviewToRemove != null) {
             mList.remove(reviewToRemove);
             saveReviews("reviews.txt");
@@ -137,14 +164,7 @@ public class ReviewManager extends Manager<Review> {
     }
 
     public boolean reportReview(String reviewID) {
-        Review reviewToReport = null;
-
-        for (Review r : mList) {
-            if (r.getReviewID().equals(reviewID)) {
-                reviewToReport = r;
-                break;
-            }
-        }
+        Review reviewToReport = find(reviewID);
 
         if (reviewToReport != null) {
             reviewToReport.incrementWarning();
@@ -161,4 +181,8 @@ public class ReviewManager extends Manager<Review> {
         // Review.matches(kwd)가 호출됩니다.
         return (ArrayList<Review>) findAll(kwd);
     }
+
+    //findReviewsByMenu, findReviewsByAuthor, getAverageRatingForMenu,displayReviews, searchReviews는 GUI에서 직접 사용하지 않거나,
+    //     DataEngineImpl의 search(kwd)로 대체될 수 있음
+    //    하지만 기존의 비즈니스 로직이므로 일단 유지
 }

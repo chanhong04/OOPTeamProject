@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import facade.UIData;
@@ -11,6 +12,7 @@ public class User implements Manageable, UIData {
 	String nickName;
 	String role;
 	int warningCount;
+	private ArrayList<String> likeMenus;
 	
 	public User() {}
 	public User(String userId, String password, String nickName, String role) {
@@ -19,6 +21,7 @@ public class User implements Manageable, UIData {
 		this.nickName = nickName;
 		this.role = role;
 	}
+	
 	public void read(Scanner scan) {
 		userId = scan.next();
 		password = scan.next();
@@ -54,4 +57,22 @@ public class User implements Manageable, UIData {
 		texts[4] = String.valueOf(warningCount);
 		return texts;
 	}
+	
+	public void addLike(String menuName) {
+        if (!likeMenus.contains(menuName)) {
+            likeMenus.add(menuName);
+        }
+    }
+
+    public void removeLike(String menuName) {
+        likeMenus.remove(menuName);
+    }
+
+    public boolean isLiked(String menuName) {
+        return likeMenus.contains(menuName);
+    }
+
+    public ArrayList<String> getLikeMenus() {
+        return likeMenus;
+    }
 }

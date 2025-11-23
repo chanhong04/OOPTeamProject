@@ -11,13 +11,20 @@ public class Menu {
 	private String name;
 	private int price;
 	private String description; //메뉴 설명
+	// *** 추가된 부분 시작 ***
+	private String category; // 메뉴 분류 (예: 한식, 중식)
+	// *** 추가된 부분 끝 ***
 	private String imagePath;
 	// private boolean isSoldOut; // 품절 여부 - 추후 추가를 위한 주석 처리
 
-	public Menu(String name, int price, String description, String imagePath) {
+	// *** 수정된 생성자: category 필드 추가 ***
+	public Menu(String name, int price, String description, String category, String imagePath) {
 		this.name = name;
 		this.price = price;
 		this.description = description;
+		// *** 추가된 부분 시작 ***
+		this.category = category;
+		// *** 추가된 부분 끝 ***
 		this.imagePath = imagePath;
 		// this.isSoldOut = isSoldOut; // 품절 여부 - 추후 추가를 위한 주석 처리
 	}
@@ -26,6 +33,9 @@ public class Menu {
 	public String getName() { return name; }
 	public int getPrice() { return price; }
 	public String getDescription() { return description; }
+	// *** 추가된 Getter ***
+	public String getCategory() { return category; }
+	// *** 추가된 Getter 끝 ***
 	public String getImagePath() { return imagePath; }
 	// public boolean isSoldOut() { return isSoldOut; } // 품절 여부 - 추후 추가를 위한 주석 처리
 
@@ -33,6 +43,9 @@ public class Menu {
 	public void setName(String name) { this.name = name; }
 	public void setPrice(int price) { this.price = price; }
 	public void setDescription(String description) { this.description = description; }
+	// *** 추가된 Setter ***
+	public void setCategory(String category) { this.category = category; }
+	// *** 추가된 Setter 끝 ***
 	public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 	// public void setSoldOut(boolean soldOut) { this.isSoldOut = soldOut; } // 품절 여부 - 추후 추가를 위한 주석 처리
 
@@ -40,16 +53,16 @@ public class Menu {
 
 	/**
 	 * [수정됨] menus.txt에 저장될 때 사용될 형식 (탭 구분)
-	 * *주의: 이 toString()은 '가게이름'을 포함하지 않습니다.*
-	 * 형식: 메뉴명(탭)가격(탭)설명(탭)사진경로
+	 * 형식: 메뉴명(탭)가격(탭)설명(탭)메뉴분류(탭)사진경로
 	 */
-	//가게 이름만 비교
+	// *** toString() 수정: category 필드 추가 ***
 	@Override
 	public String toString() {
 		return String.join("\t",
 				name,
 				String.valueOf(price),
 				description,
+				category, // *** category 추가 ***
 				imagePath
 				// String.valueOf(isSoldOut) // 품절 여부 - 추후 추가를 위한 주석 처리
 		);

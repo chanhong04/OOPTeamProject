@@ -40,7 +40,7 @@ public class MainGUI {
     private MyReviewUi myreviewPanel;
     //private MenuDetailUI menudetailPanel;
     
-    static JFrame mainFrame = new JFrame("학식 추천 앱이름");
+    static JFrame mainFrame = new JFrame("점심 뭐 먹");
 
     public void createAndShowGUI() {
         mainFrame.setSize(1600, 900);

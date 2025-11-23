@@ -25,9 +25,9 @@ public class CafeteriaManager extends DataEngineImpl<Cafeteria> {
 		return instance;
 	}
 
-	// mList 반환
+	// cafeteriaList -> mList
 	public List<Cafeteria> getCafeteriaList() {
-		return mList; // cafeteriaList -> mList
+		return mList;
 	}
 
 	@Override
@@ -59,17 +59,18 @@ public class CafeteriaManager extends DataEngineImpl<Cafeteria> {
 
 				String[] parts = line.split("\t");
 
-				if (parts.length >= 5) {
+				if (parts.length >= 6) {
 					String cafeteriaName = parts[0];
-					Cafeteria targetCafeteria = findCafeterias(cafeteriaName); // mList 사용
+					Cafeteria targetCafeteria = findCafeterias(cafeteriaName);
 
 					if (targetCafeteria != null) {
 						String name = parts[1];
 						int price = Integer.parseInt(parts[2]);
 						String description = parts[3];
-						String imagePath = parts[4];
+						String category = parts[4];
+						String imagePath = parts[5];
 
-						Menu menu = new Menu(name, price, description, imagePath);
+						Menu menu = new Menu(name, price, description, category, imagePath);
 						targetCafeteria.createMenu(menu);
 					} else {
 						System.err.println("경고: 메뉴의 가게이름 '" + cafeteriaName + "'을(를) cafeterias.txt에서 찾을 수 없습니다.");
@@ -96,17 +97,18 @@ public class CafeteriaManager extends DataEngineImpl<Cafeteria> {
 
 	public void saveMenus(String fileName) {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
-			for (Cafeteria c : mList) { // cafeteriaList -> mList
+			for (Cafeteria c : mList) {
 				String cafeteriaName = c.getName();
 
 				for (Menu m : c.readMenus()) {
+					// Menu.java의 toString()과 동일하게 4개 필드만 저장
 					String menuData = String.join("\t",
 							m.getName(),
 							String.valueOf(m.getPrice()),
 							m.getDescription(),
 							m.getImagePath()
 					);
-
+					// 저장 형식: 가게이름(탭)메뉴명(탭)가격(탭)설명(탭)사진경로 (총 5개 필드)
 					bw.write(cafeteriaName + "\t" + menuData);
 					bw.newLine();
 				}

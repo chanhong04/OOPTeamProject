@@ -3,9 +3,10 @@ package model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import facade.UIData;
 import mgr.Manageable;
 
-public class Review implements Manageable {
+public class Review implements Manageable, UIData {
 	private String reviewID; // review 식별을 위한 고유 ID
     private String cafeteriaName; //음식점 이름
     private String menuName;  //리뷰 작성한 메뉴(주문한 메뉴 중에)
@@ -75,6 +76,9 @@ public class Review implements Manageable {
     public boolean matches(String kwd) {
         if (kwd == null) return false;
 
+        //신고/삭제 기능을 위해 추가
+        if (reviewID.equals(kwd)) return true;
+
         // 평점 검색 (숫자일 경우)
         if (kwd.length() == 1 && Character.isDigit(kwd.charAt(0))) {
             if (Integer.toString(rating).equals(kwd)) return true;
@@ -87,6 +91,33 @@ public class Review implements Manageable {
         if (authorID.equals(kwd)) return true; // ID는 정확히 일치할 때만
 
         return false;
+    }
+
+    //GUI 테이블에 표시될 데이터를 String 배열로 반환
+    @Override
+    public String[] getUiTexts() {
+        String[] texts = new String[7]; // ID, 식당, 메뉴, 평점, 내용, 작성자, 작성일
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+
+        texts[0] = reviewID;
+        texts[1] = cafeteriaName;
+        texts[2] = menuName;
+        texts[3] = Integer.toString(rating);
+        texts[4] = content;
+        texts[5] = authorID;
+        texts[6] = sdf.format(writtenDate);
+
+        return texts;
+    }
+
+    //GUI에서 수정된 데이터를 받아 필드에 적용
+    @Override
+    public void set(String[] uiTexts) {
+
+        this.cafeteriaName = uiTexts[1]; //식당 이름 수정
+        this.menuName = uiTexts[2]; //메뉴 이름 수정
+        setRating(Integer.parseInt(uiTexts[3])); //평점 수정
+        this.content = uiTexts[4]; //리뷰 내용 수정
     }
 
     //메뉴별로 리뷰를 구별하여 출력하기 위한 matches 함수
