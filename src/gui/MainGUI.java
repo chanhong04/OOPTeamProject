@@ -2,7 +2,7 @@ package gui;
 
 import javax.swing.*;
 
-//import model.MainApp;
+import model.MainApp;
 
 import java.awt.*;
 
@@ -14,11 +14,11 @@ public class MainGUI {
         return main;
     }
 
-    //static MainApp app = MainApp.getInstance();
+    static MainApp app = MainApp.getInstance();
 
     public static void main(String[] args) {
         // 사용자/메뉴 데이터 로드
-        //app.run();
+        app.run();
         // GUI 시작
         startGUI();
     }
@@ -47,6 +47,13 @@ public class MainGUI {
     private MyReviewUi myreviewPanel;
     //private RecommandUI myrecommPanel;
     //private WriteReviewUI writereviewPanel;
+    private DollimpanUI DollimPanel;
+    
+    //관리자
+    private AdminTabUI adminTabPanel;
+    private AdminMemberUI adminMemberPanel;
+    private AdminBanUI adminBanPanel;
+    private AdminReviewUI adminReviewPanel;
     
     static JFrame mainFrame = new JFrame("학식 추천 앱이름");
 
@@ -67,11 +74,18 @@ public class MainGUI {
         mypagePanel = new MyPage(this);
         myorderPanel = new MyOrder(this);
         myreviewPanel = new MyReviewUi(this);
-        //myrecommPanel = new RecommandUI(this);
+        DollimPanel = new DollimpanUI(this);
         //writereviewPanel = new WriteReviewUI();
+        
+        //관리자
+        adminTabPanel = new AdminTabUI(this);
+        adminMemberPanel = new AdminMemberUI(this);
+        adminBanPanel = new AdminBanUI(this);
+        adminReviewPanel = new AdminReviewUI(this);
+           
         cardLayout = new CardLayout();
         mainContainerPanel = new JPanel(cardLayout);
-
+        
         mainContainerPanel.add(loginPanel, "LOGIN");
         mainContainerPanel.add(cafeteriaPanel, "CAFETERIA");
         mainContainerPanel.add(registerPanel, "REGISTER");
@@ -83,7 +97,14 @@ public class MainGUI {
         mainContainerPanel.add(mypagePanel, "MYPAGE");
         mainContainerPanel.add(myorderPanel, "MYORDER");
         mainContainerPanel.add(myreviewPanel, "MYREVIEW");
-        //mainContainerPanel.add(myrecommPanel, "RECOMMAND");
+        mainContainerPanel.add(DollimPanel, "DOLLIMPAN"); //돌림판
+        
+        //관리자
+        mainContainerPanel.add(adminTabPanel, "ADMINTAB");
+        mainContainerPanel.add(adminMemberPanel, "ADMINMEM");
+        mainContainerPanel.add(adminBanPanel, "ADMINBAN");
+        mainContainerPanel.add(adminReviewPanel, "ADMINREVIEW");
+        
 
         mainFrame.setContentPane(mainContainerPanel);
         mainFrame.setVisible(true);

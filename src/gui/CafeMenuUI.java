@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class CafeMenuUI extends JPanel {
         String name;      // 메뉴 이름
         String price;     // 가격 (문자열로 그대로 사용)
         String desc;      // 설명
+        String category;  // 카테고리
         String imageFile; // 이미지 파일명 (png)
     }
 
@@ -150,36 +152,47 @@ public class CafeMenuUI extends JPanel {
     private List<MenuItem> loadMenuItems() {
         List<MenuItem> list = new ArrayList<>();
 
-        // 프로젝트 루트에 menus.txt 있다고 가정 (users.txt 방식과 동일)
         File file = new File("menus.txt");
         if (!file.exists()) {
             System.out.println("menus.txt 파일을 찾을 수 없습니다: " + file.getAbsolutePath());
             return list;
         }
 
-        try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+        try {
+            List<String> allLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
 
-            String line;
-            while ((line = br.readLine()) != null) {
+            for (String line : allLines) {
                 line = line.trim();
                 if (line.isEmpty()) continue;
 
-                // 탭 구분: 식당이름, 메뉴이름, 가격, 설명, 이미지파일
                 String[] cols = line.split("\\t");
+
                 if (cols.length < 4) continue;
 
                 String cafe = cols[0].trim();
                 if (!cafe.equals(cafeName)) {
-                    continue; // 현재 식당 이름과 다르면 스킵
+                    continue;
                 }
 
                 MenuItem item = new MenuItem();
-                item.cafe      = cafe;
-                item.name      = cols[1].trim();
-                item.price     = cols[2].trim();
-                item.desc      = cols[3].trim();
-                item.imageFile = (cols.length > 4) ? cols[4].trim() : null;
+                item.cafe      = cafe;              // [0] 식당
+                item.name      = cols[1].trim();    // [1] 메뉴명
+                item.price     = cols[2].trim();    // [2] 가격
+                item.desc      = cols[3].trim();    // [3] 설명
+
+                // [4] 카테고리 (한식, 중식 등) - 데이터가 있을 때만
+                if (cols.length > 4) {
+                    item.category = cols[4].trim();
+                } else {
+                    item.category = "";
+                }
+
+                // [5] 이미지 파일명 (plain_rice.png 등) - 데이터가 있을 때만
+                if (cols.length > 5) {
+                    item.imageFile = cols[5].trim();
+                } else {
+                    item.imageFile = null;
+                }
 
                 list.add(item);
             }
@@ -218,7 +231,7 @@ public class CafeMenuUI extends JPanel {
         Image scaled = original.getImage()
                 .getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
         return new ImageIcon(scaled);
-    } 
+    }
 
     // ── 상단 '←' 이전 버튼 동작 ─────────────────────────────────
     class BackButtonListener extends MouseAdapter {
