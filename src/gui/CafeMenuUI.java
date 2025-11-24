@@ -142,7 +142,7 @@ public class CafeMenuUI extends JPanel {
         card.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                new MenuDetailUI();   // 나중에 item 정보 넘기고 싶으면 생성자 수정
+                new MenuDetailUI(mainGUI, cafeName, item.name);   // 나중에 item 정보 넘기고 싶으면 생성자 수정
             }
         });
 

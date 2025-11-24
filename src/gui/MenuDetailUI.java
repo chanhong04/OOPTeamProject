@@ -76,16 +76,6 @@ public class MenuDetailUI extends JFrame {
         ratingLabel.setBounds(250, 145, 200, 30);
         cp.add(ratingLabel);
 
-        //주문 버튼 삭제
-//        JButton orderBtn = new JButton("주문");
-//        orderBtn.setFont(new Font("Dialog", Font.PLAIN, 14));
-//        orderBtn.setBounds(650, 130, 120, 40);
-//        orderBtn.setBackground(new Color(146,107,191));
-//        orderBtn.setForeground(Color.WHITE);
-//        orderBtn.setFocusPainted(false);
-//        orderBtn.setBorderPainted(false);
-//        cp.add(orderBtn);
-
         // 리뷰 영역
         // ReviewManager에서 해당 메뉴의 리뷰들 가져오기
         ArrayList<Review> reviewList = rm.findReviewsByMenu(cafeteriaName, menuName);
@@ -260,12 +250,6 @@ public class MenuDetailUI extends JFrame {
     }
 
     public static void main(String[] args) {
-
-//        SwingUtilities.invokeLater(MenuDetailUI::new);
-        // 단독 실행 시 "한식당"의 "제육덮밥" 리뷰로 테스트하기 위해 테스트 생성자 호출
-        // //=>나중에 위에 주석 풀고 아래 코드는 삭제
-        SwingUtilities.invokeLater(() -> {
-            new MenuDetailUI(null, "한식당", "제육덮밥");
-        });
+    	SwingUtilities.invokeLater(MenuDetailUI::new);
     }
 }
