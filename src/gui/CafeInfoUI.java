@@ -15,12 +15,11 @@ public class CafeInfoUI extends JFrame {
         int id;
         String name;
         String location;
-        String position;
-        String hours;
         String description;
     }
 
     // cafeterias.txt 내용을 id -> CafeData 로 캐싱
+ // cafeterias.txt 내용을 id -> CafeData 로 캐싱
     private static final Map<Integer, CafeData> CAFE_MAP = loadCafeData();
 
     private static Map<Integer, CafeData> loadCafeData() {
@@ -36,19 +35,21 @@ public class CafeInfoUI extends JFrame {
                 new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
 
             String line;
+            int idCounter = 1; // 파일에 id가 없으므로 자동 생성
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
 
-                String[] p = line.split(",", 6); // id,이름,위치,입구기준,시간,설명
-                if (p.length < 6) continue;
+                // 공백(스페이스/탭) 기준으로 두 개 항목(name, location) 분리
+                String[] p = line.split("\\s+", 2);
+                if (p.length < 2) continue;
 
                 CafeData c = new CafeData();
-                c.id          = Integer.parseInt(p[0].trim());
-                c.name        = p[1].trim();
-                c.location    = p[2].trim();
-                c.position    = p[3].trim();
-                c.hours       = p[4].trim();
-                c.description = p[5].trim();
+                c.id       = idCounter++;
+                c.name     = p[0].trim();
+                c.location = p[1].trim();
+
+                
+                cafeDescription(c);
 
                 map.put(c.id, c);
             }
@@ -59,6 +60,43 @@ public class CafeInfoUI extends JFrame {
         return map;
     }
 
+ // 각 식당별 position / hours / description 하드코딩
+    private static void cafeDescription(CafeData c) {
+        switch (c.name) {
+            case "만권화밥":
+                c.description =
+                        "만권화밥은 고추장, 간장, 된장을 기본으로 하는 한국식 소스에 숯불에 구운 재료를 밥과 함께 제공하는 덮밥 전문점입니다.\n"
+                        + "퓨전 음식이지만 한국적인 맛을 살려 남녀노소 누구나 좋아하며,\n"
+                        + "다양한 메뉴(예: 숯불김치돈육화밥, 숯불소고기화밥)를 합리적인 가격에 즐길 수 있는 곳입니다.";
+                break;
+
+            case "숑숑돈까스":
+            	c.description =
+                        "숑숑돈까스는 매콤 돈까스, 옛날 왕 돈까스, 마라 왕 돈까스 등 다양한 메뉴를 제공하는 돈까스 전문점입니다.\n"
+                        + "일반적으로 가격이 저렴하면서도 양이 푸짐한 가성비 맛집으로 알려져 있으며, 특히 튀김이 바삭하고 소스가 맛있는 것이 특징입니다.";
+                break;
+
+            case "버거&타코":
+            	c.description =
+                        "버거앤타코는 수제버거와 타코를 전문으로 하는 외식 브랜드입니다.\n"
+                        + "‘버거는 묵직하게, 타코는 강렬하게’라는 콘셉트 아래, 즉석에서 신선한 재료로 조리한 버거와 타코를 제공하며,\n"
+                        + "특히 ‘BT버거앤타코’는 퀘사디아, 비프 살사, 치즈버거 등 다양한 메뉴를 선보입니다.";
+                break;
+
+            case "위델가":
+            	c.description =
+                        "위델가는 경기대학교 내 학생식당 코너 중 하나로, ‘아슐랭 경기대학교점(위델가)’으로도 알려져 있습니다.\n"
+                        + "한식 중심의 메뉴를 합리적인 가격에 제공하며, 따뜻한 한 끼 식사를 원하는 학생들에게 인기가 많습니다.";
+                break;
+
+            case "신머이쌀국수":
+            	c.description =
+                        "신머이쌀국수는 베트남 현지의 맛을 재현한 쌀국수 전문 브랜드입니다.\n"
+                        + "쌀로 만든 국수와 육수, 고기, 채소 등을 넣어 칠리나 라임, 고수 등을 곁들여 먹는 전통 베트남 요리이며, ‘신머이’는 베트남어로 ‘환영합니다’라는 뜻을 갖습니다.\n"
+                        + "특히 닭반마리 쌀국수는 발명특허를 받은 독자적인 레시피를 사용해 신머이만의 특별한 맛을 제공합니다.";
+                break;
+        }
+    }
 
     // ---------- 필드 ----------
     private MainGUI mainGUI;
@@ -147,10 +185,8 @@ public class CafeInfoUI extends JFrame {
     private String buildInfoText(CafeData c) {
         StringBuilder sb = new StringBuilder();
         sb.append("[이름] ").append(c.name).append("\n\n");
-        sb.append("[위치] ").append(c.location)
-          .append(" (").append(c.position).append(")\n\n");
-        sb.append("[영업시간] ").append(c.hours).append("\n\n");
-        sb.append("[소개]\n").append(c.description).append("\n");
+        sb.append("[위치] ").append(c.location).append("\n\n");
+        sb.append("[정보] ").append(c.description).append("\n");
         return sb.toString();
     }
 
@@ -167,10 +203,10 @@ public class CafeInfoUI extends JFrame {
     private String getImageFileName(int id) {
         switch (id) {
             case 1: return "만권화밥.png";
-            case 2: return "쑝쑝돈까스.png";
-            case 3: return "버거앤타코.png";
-            case 4: return "위델가.png";
-            case 5: return "신머이쌀국수.png";
+            case 2: return "버거앤타코.png";
+            case 3: return "신머이쌀국수.png";
+            case 4: return "쑝쑝돈까스.png";
+            case 5: return "위델가.png";
             default: return null;
         }
     }

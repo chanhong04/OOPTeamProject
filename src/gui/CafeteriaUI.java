@@ -195,6 +195,7 @@ public class CafeteriaUI extends JPanel {
                     break;
                 case "추천돌림판":
                 	mainGUI.showScreen("DOLLIMPAN");
+                	break;
                 case "I1":
                     new CafeInfoUI(mainGUI, 1);   // info 버튼
                     break;
