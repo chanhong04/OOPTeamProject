@@ -50,62 +50,85 @@ public class MyPage extends JPanel {
         loadProfileFromUsersFile();
 
         // 중앙 버튼(아이콘 없이 텍스트만, 동작 없음)
-        JButton LogoutBtn = makeFlatButton("로그아웃");
+        JButton LogoutBtn = makeFlatButton("로그아웃", "로그아웃", "Logout.png");
         LogoutBtn.setBounds(240, 210, 180, 180);
         add(LogoutBtn);
 
-        JButton ReviewBtn = makeFlatButton("내가 쓴 리뷰");
+        JButton ReviewBtn = makeFlatButton("내가 쓴 리뷰", "내가 쓴 리뷰", "MyReview.png");
         ReviewBtn.setBounds(710, 210, 180, 180);
         add(ReviewBtn);
-
-        JButton ChargeBtn = makeFlatButton("캐시 충전");
-        ChargeBtn.setBounds(1180, 210, 180, 180);
-        add(ChargeBtn);
-
-        JButton MyOrderBtn = makeFlatButton("주문 내역");
-        MyOrderBtn.setBounds(240, 420, 180, 180);
-        add(MyOrderBtn);
-
-        // 남은 캐시(둥근 버튼 스타일) — 표시용
-        RoundedButton cash = new RoundedButton("남은 경기 캐시 :  N 원");
-        cash.setBounds(250, 640, 1100, 44);
-        cash.setBackground(new Color(58, 118, 248));
-        cash.setForeground(Color.WHITE);
-        cash.setFont(new Font("Dialog", Font.BOLD, 16));
-        add(cash);
 
         // 하단 바: 버튼 두 개(학식 / 마이페이지)
         JPanel bottomBar = new JPanel(new GridLayout(1, 2));
         bottomBar.setBounds(80, 740, 1440, 90);
         bottomBar.setBackground(new Color(245, 238, 252));
 
-        JButton CafeBtn = new JButton("학식");
-        JButton MyPageBtn = new JButton("마이페이지");
-        styleTab(CafeBtn);
-        styleTab(MyPageBtn);
-        MyPageBtn.setForeground(new Color(146, 107, 191)); // 현재 선택된 탭 느낌
+        JButton tabCafe = new JButton("학식");
+        JButton RDBtn = new JButton("추천돌림판");
+        JButton tabMy   = new JButton("마이페이지");
+        styleTab(tabCafe);
+        styleTab(RDBtn);
+        styleTab(tabMy);
+        
+        tabCafe.setForeground(new Color(146, 107, 191)); // 현재 선택된 탭 느낌
 
-        bottomBar.add(CafeBtn);
-        bottomBar.add(MyPageBtn);
+        bottomBar.add(tabCafe);
+        bottomBar.add(RDBtn);
+        bottomBar.add(tabMy);
         add(bottomBar);
 
         // 리스너 연결
         MyPageButtonListener listener = new MyPageButtonListener();
-        CafeBtn.addActionListener(listener);
+        tabCafe.addActionListener(listener);
+        tabMy.addActionListener(listener);
+        RDBtn.addActionListener(listener);
         LogoutBtn.addActionListener(listener);
         ReviewBtn.addActionListener(listener);
-        MyOrderBtn.addActionListener(listener);
         // ChargeBtn, MyPageBtn은 아직 동작 없음 (필요하면 listener 추가)
     }
 
+    private JButton makeFlatButton(String buttonName, String text, String imageFile) {
+        JButton b = new JButton(text);
+        b.setFont(new Font("Dialog", Font.BOLD, 16));
+        b.setFocusPainted(false);
+        b.setBorderPainted(false);
+        b.setContentAreaFilled(false);
+        
+        ImageIcon icon = loadScaledIcon(imageFile, 180, 180);
+        if (icon != null) {
+            b.setIcon(icon);
+            b.setHorizontalAlignment(SwingConstants.CENTER);
+            b.setVerticalAlignment(SwingConstants.CENTER);
+        }
+        b.setActionCommand(buttonName);
+        b.setHorizontalTextPosition(SwingConstants.CENTER);
+        b.setVerticalTextPosition(SwingConstants.BOTTOM);
+        return b;
+    }
+    
+    //로그인 정보 읽어오기
+    public void refreshProfile() {
+        loadProfileFromUsersFile();
+    } 
+
     // users.txt에서 한 줄 읽어서 이름 / ID 세팅
     private void loadProfileFromUsersFile() {
+    	//로그인 id 정보
+    	String loginId = mainGUI.getLoginID();
+        if (loginId == null || loginId.isEmpty()) {
+            // 아직 로그인 안 했으면 기본값 유지
+            return;
+        }
+    	
         File file = new File("users.txt");  // 실행 위치 기준
 
         if (!file.exists()) {
             // 파일 없으면 그냥 기본 텍스트 유지
             return;
         }
+        
+        nameLabel.setText("이름");
+        uidLabel.setText("ID : ");
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -114,12 +137,14 @@ public class MyPage extends JPanel {
                 if (line.isEmpty()) continue;
 
                 // users.txt 한 줄: id pw name role level
-                String[] tokens = line.split("\\s+");
+                String[] tokens = line.split("\t");
                 if (tokens.length < 3) continue;
 
                 String id   = tokens[0]; // user~
                 String name = tokens[2]; // 이름
-
+                
+                if (!id.equals(loginId)) continue;
+                
                 // 윗줄 = 이름, 아랫줄 = ID : user~
                 nameLabel.setText(name);
                 uidLabel.setText("ID : " + id);
@@ -130,6 +155,32 @@ public class MyPage extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    private ImageIcon loadIcon(String fileName){
+        java.net.URL imageURL = CafeteriaUI.class.getResource("/images/" + fileName);
+        
+        if (imageURL == null) {
+            System.out.println("이미지 파일을 찾을 수 없습니다: " + fileName);
+            return null;
+        }
+        return new ImageIcon(imageURL);
+    }
+    
+    private ImageIcon loadScaledIcon(String fileName, int targetW, int targetH) {
+        ImageIcon original = loadIcon(fileName);
+        if (original == null) return null;
+
+        int iw = original.getIconWidth();
+        int ih = original.getIconHeight();
+
+        double scale = Math.min((double) targetW / iw, (double) targetH / ih);
+        int newW = (int) (iw * scale);
+        int newH = (int) (ih * scale);
+
+        Image scaled = original.getImage()
+                .getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaled);
     }
 
     private JButton makeFlatButton(String text) {
@@ -175,23 +226,19 @@ public class MyPage extends JPanel {
         public void actionPerformed(ActionEvent e) {
             String buttonName = e.getActionCommand();
             switch(buttonName) {
-                case "학식":
-                    // 학식 메인 화면으로
-                    mainGUI.showScreen("CAFETERIA");
-                    break;
                 case "내가 쓴 리뷰":
-                    // 내가 쓴 리뷰 화면 (MyReviewUi를 JPanel로 만들어 "MYREVIEW"로 등록했다고 가정)
                     mainGUI.showScreen("MYREVIEW");
                     break;
-                /*case "캐시 충전":
-                    mainGUI.showScreen("CHARGE");
-                    break;*/
-                case "주문 내역":
-                    // 주문 내역 화면 (MyOrder를 JPanel로 만들어 "MYORDER"로 등록했다고 가정)
-                    mainGUI.showScreen("MYORDER");
+                case "마이페이지":
+                    mainGUI.showScreen("MYPAGE");
+                    break;
+                case "학식":
+                    mainGUI.showScreen("CAFETERIA");
+                    break;
+                case "추천돌림판":
+                	mainGUI.showScreen("DOLLIMPAN");
                     break;
                 case "로그아웃":
-                    // 로그인 화면으로
                     mainGUI.showScreen("LOGIN");
                     break;
             }

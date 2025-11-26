@@ -71,26 +71,26 @@ public class CafeInfoUI extends JFrame {
                 break;
 
             case "숑숑돈까스":
-            	c.description =
+               c.description =
                         "숑숑돈까스는 매콤 돈까스, 옛날 왕 돈까스, 마라 왕 돈까스 등 다양한 메뉴를 제공하는 돈까스 전문점입니다.\n"
                         + "일반적으로 가격이 저렴하면서도 양이 푸짐한 가성비 맛집으로 알려져 있으며, 특히 튀김이 바삭하고 소스가 맛있는 것이 특징입니다.";
                 break;
 
             case "버거&타코":
-            	c.description =
+               c.description =
                         "버거앤타코는 수제버거와 타코를 전문으로 하는 외식 브랜드입니다.\n"
                         + "‘버거는 묵직하게, 타코는 강렬하게’라는 콘셉트 아래, 즉석에서 신선한 재료로 조리한 버거와 타코를 제공하며,\n"
                         + "특히 ‘BT버거앤타코’는 퀘사디아, 비프 살사, 치즈버거 등 다양한 메뉴를 선보입니다.";
                 break;
 
             case "위델가":
-            	c.description =
+               c.description =
                         "위델가는 경기대학교 내 학생식당 코너 중 하나로, ‘아슐랭 경기대학교점(위델가)’으로도 알려져 있습니다.\n"
                         + "한식 중심의 메뉴를 합리적인 가격에 제공하며, 따뜻한 한 끼 식사를 원하는 학생들에게 인기가 많습니다.";
                 break;
 
             case "신머이쌀국수":
-            	c.description =
+               c.description =
                         "신머이쌀국수는 베트남 현지의 맛을 재현한 쌀국수 전문 브랜드입니다.\n"
                         + "쌀로 만든 국수와 육수, 고기, 채소 등을 넣어 칠리나 라임, 고수 등을 곁들여 먹는 전통 베트남 요리이며, ‘신머이’는 베트남어로 ‘환영합니다’라는 뜻을 갖습니다.\n"
                         + "특히 닭반마리 쌀국수는 발명특허를 받은 독자적인 레시피를 사용해 신머이만의 특별한 맛을 제공합니다.";
@@ -132,13 +132,6 @@ public class CafeInfoUI extends JFrame {
         cp.setBackground(Color.WHITE);
 
         // 상단 바 -------------------------------------------------
-        JLabel back = new JLabel("←", SwingConstants.CENTER);
-        back.setFont(new Font("Dialog", Font.PLAIN, 22));
-        back.setBounds(40, 20, 40, 30);
-        back.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        cp.add(back);
-        back.addMouseListener(new BackButtonListener());
-
         JSeparator sep = new JSeparator();
         sep.setBounds(40, 70, 820, 1);
         cp.add(sep);
@@ -248,17 +241,5 @@ public class CafeInfoUI extends JFrame {
             lbl.setText("이미지 없음");
         }
         panel.add(lbl);
-    }
-
-
-    class BackButtonListener extends MouseAdapter {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            if (mainGUI != null) {
-                // CAFE1, CAFE2, ... 으로 돌아가게
-                mainGUI.showScreen("CAFE" + cafeId);
-            }
-            dispose();
-        }
     }
 }

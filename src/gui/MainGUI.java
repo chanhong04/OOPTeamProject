@@ -15,7 +15,16 @@ public class MainGUI {
     }
 
     static MainApp app = MainApp.getInstance();
+    
+    private String loginId;
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
 
+    public String getLoginID() {
+        return loginId;
+    }
+    
     public static void main(String[] args) {
         // 사용자/메뉴 데이터 로드
         app.run();
@@ -114,6 +123,10 @@ public class MainGUI {
     }
 
     public void showScreen(String panelName) {
+    	//로그인 시 마이페이지 변경점
+    	if ("MYPAGE".equals(panelName)) {
+            mypagePanel.refreshProfile();
+        }
         cardLayout.show(mainContainerPanel, panelName);
     }
 }

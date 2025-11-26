@@ -184,7 +184,8 @@ public class LoginUI extends JPanel {
         }
 
         boolean found = false;
-
+        boolean admin = false;
+        
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -200,6 +201,9 @@ public class LoginUI extends JPanel {
 
                 if (id.equals(fileId) && pw.equals(filePw)) {
                     found = true;
+                    if("Admin".equals(tokens[3]))
+                    	admin = true;
+                    	
                     break;
                 }
             }
@@ -214,8 +218,11 @@ public class LoginUI extends JPanel {
             return;
         }
 
-        if (found) {
-            // 로그인 성공 → 학식 화면으로 전환
+        if (admin) {
+        	mainGUI.showScreen("ADMINTAB");
+        }
+        else if (found) {
+        	mainGUI.setLoginId(id);
             mainGUI.showScreen("CAFETERIA");
         } else {
             // 로그인 실패

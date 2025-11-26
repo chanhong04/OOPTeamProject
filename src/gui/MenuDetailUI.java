@@ -140,25 +140,6 @@ public class MenuDetailUI extends JFrame {
         reviewScroll.getVerticalScrollBar().setUnitIncrement(16);
         cp.add(reviewScroll);
 
-
-        // 8. 하단 버튼
-        JPanel bottomBar = new JPanel(new GridLayout(1, 2));
-        bottomBar.setBounds(60, 590, 780, 60);
-        bottomBar.setBackground(new Color(248, 242, 255));
-
-        JButton cafeBtn = new JButton("학식");
-        JButton myBtn   = new JButton("마이페이지");
-        styleTab(cafeBtn);
-        styleTab(myBtn);
-
-        TabButtonListener tabListener = new TabButtonListener();
-        cafeBtn.addActionListener(tabListener);
-        myBtn.addActionListener(tabListener);
-
-        bottomBar.add(cafeBtn);
-        bottomBar.add(myBtn);
-        cp.add(bottomBar);
-
         setVisible(true);
     }
 
@@ -298,8 +279,21 @@ public class MenuDetailUI extends JFrame {
         }
     }
     class BackButtonListener extends MouseAdapter {
+        @Override
         public void mouseClicked(MouseEvent e) {
-            if (mainGUI != null) mainGUI.showScreen("CAFE1"); // ID에 맞게 수정 필요
+            if (mainGUI != null) {
+                if ("만권화밥".equals(cafeteriaName)) {
+                    mainGUI.showScreen("CAFE1");
+                } else if ("버거앤타코".equals(cafeteriaName)) {
+                    mainGUI.showScreen("CAFE2");
+                } else if ("신머이쌀국수".equals(cafeteriaName)) {
+                    mainGUI.showScreen("CAFE3");
+                } else if ("숑송돈까스".equals(cafeteriaName)) {
+                    mainGUI.showScreen("Cafe4");
+                } else if ("위델가".equals(cafeteriaName)) {
+                   mainGUI.showScreen("Cafe5");
+                }
+            }
             dispose();
         }
     }
