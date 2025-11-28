@@ -12,7 +12,7 @@ public class User implements Manageable, UIData {
 	String nickName;
 	String role;
 	int warningCount;
-	private ArrayList<String> likeMenus;
+
 	
 	public User() {}
 	public User(String userId, String password, String nickName, String role) {
@@ -34,9 +34,13 @@ public class User implements Manageable, UIData {
 		System.out.format("[%s] (경고%d회) ", userId, warningCount);
 		System.out.println();
 	}
-	
+
+	@Override
 	public boolean matches(String kwd) {
-		return true;
+		if (userId.equals(kwd)) {
+			return true;
+		}
+		return false;
 	}
 	
 	void checkPassword(String pw) {}
@@ -57,22 +61,28 @@ public class User implements Manageable, UIData {
 		texts[4] = String.valueOf(warningCount);
 		return texts;
 	}
-	
-	public void addLike(String menuName) {
-        if (!likeMenus.contains(menuName)) {
-            likeMenus.add(menuName);
-        }
-    }
 
-    public void removeLike(String menuName) {
-        likeMenus.remove(menuName);
-    }
+	public void ban() {
+		this.role = "banned";
+	}
 
-    public boolean isLiked(String menuName) {
-        return likeMenus.contains(menuName);
-    }
+	public void unban() {
+		this.role = "user";
+	}
 
-    public ArrayList<String> getLikeMenus() {
-        return likeMenus;
-    }
+	public boolean isBanned() {
+		return "banned".equals(this.role);
+	}
+
+	//----------Getter----------
+	public String getRole() {
+		return role;
+	}
+	public String getId() {
+		return userId;
+	}
+	public String getName() {
+		return nickName;
+	}
+
 }

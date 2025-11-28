@@ -54,8 +54,11 @@ public class ReviewManager extends DataEngineImpl<Review> {
     }
 
     public void readReviews(String fileName) {
-        // "Review 객체를 어떻게 만드는지(new Review())"를 람다식으로 알려줍니다.
-        // Factory 인터페이스의 create() 메서드를 즉석에서 구현한 것입니다.
+        // 이 코드가 없으면 읽을 때마다 기존 데이터 뒤에 똑같은 게 계속 쌓입니다.
+        if (mList != null) {
+            mList.clear();
+        }
+        // 그 다음 파일을 읽어옴
         readAll(fileName, () -> new Review());
     }
 
@@ -180,6 +183,24 @@ public class ReviewManager extends DataEngineImpl<Review> {
         // 부모 클래스(Manager)가 제공하는 findAll 메서드를 사용하여 검색
         // Review.matches(kwd)가 호출됩니다.
         return (ArrayList<Review>) findAll(kwd);
+    }
+
+    /*신고 횟수가 threshold(10) 이상인 리뷰 목록을 반환*/
+    public ArrayList<Review> getReportedReviews(int threshold) {
+        ArrayList<Review> reportedList = new ArrayList<>();
+        for (Review r : mList) {
+            if (r.getWarningNum() >= threshold) {
+                reportedList.add(r);
+            }
+        }
+        //신고 횟수 내림차순
+        reportedList.sort(new Comparator<Review>() {
+            @Override
+            public int compare(Review r1, Review r2) {
+                return Integer.compare(r2.getWarningNum(), r1.getWarningNum());
+            }
+        });
+        return reportedList;
     }
 
     //findReviewsByMenu, findReviewsByAuthor, getAverageRatingForMenu,displayReviews, searchReviews는 GUI에서 직접 사용하지 않거나,

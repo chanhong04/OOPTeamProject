@@ -1,5 +1,6 @@
 package gui;
 
+import facade.Auth;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -41,6 +42,22 @@ public class AdminTabUI extends JPanel {
         uid.setFont(new Font("Dialog", Font.PLAIN, 14));
         uid.setBounds(0, 48, 1440, 20);
         profile.add(uid);
+
+        //로그아웃 버튼
+        JButton logoutBtn = new JButton("로그아웃");
+        logoutBtn.setFont(new Font("Dialog", Font.PLAIN, 13));
+        logoutBtn.setBackground(Color.WHITE);
+        logoutBtn.setForeground(Color.DARK_GRAY);
+        logoutBtn.setFocusPainted(false);
+        logoutBtn.setBounds(755, 810, 90, 32);
+        logoutBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        logoutBtn.addActionListener(e -> {
+            {
+                mainGUI.showScreen("LOGIN");
+            }
+        });
+        add(logoutBtn); // 프로필 패널 안에 버튼 추가
 
         // 관리자 메뉴 항목 영역
         JPanel mainPanel = new JPanel(null);

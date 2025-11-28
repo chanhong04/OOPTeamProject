@@ -13,6 +13,9 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import gui.MainGUI;
+import gui.LoginUI;
+import gui.MyPage;
 
 public class MenuDetailUI extends JFrame {
 
@@ -110,7 +113,20 @@ public class MenuDetailUI extends JFrame {
         descLabel.setVerticalAlignment(SwingConstants.TOP);
         descLabel.setBounds(250, 180, 500, 60); // 별점 아래에 위치
         cp.add(descLabel);
-
+        
+        //리뷰 작성하기 버튼
+        JButton writeReviewBtn = new JButton("리뷰 작성하기");
+        writeReviewBtn.setBounds(740, 20, 120, 30); // 레이아웃에 맞게 조정
+        writeReviewBtn.setBackground(new Color(255, 255, 255));
+        writeReviewBtn.addActionListener(e -> {
+            String authorId = (mainGUI != null) ? mainGUI.getLoginID() : null;
+            if (authorId == null || authorId.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "로그인 후 작성할 수 있어요.");
+                return;
+            }
+            new ReviewWriteUI(cafeteriaName, menuName, authorId).setVisible(true);
+        });
+        getContentPane().add(writeReviewBtn);
 
         // 7. 리뷰 리스트
         ArrayList<Review> reviewList = rm.findReviewsByMenu(cafeteriaName, menuName);

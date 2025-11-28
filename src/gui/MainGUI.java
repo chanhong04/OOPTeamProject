@@ -127,6 +127,9 @@ public class MainGUI {
     	if ("MYPAGE".equals(panelName)) {
             mypagePanel.refreshProfile();
         }
+    	if ("MYREVIEW".equals(panelName)) {
+    		myreviewPanel.refreshReviews();
+    	}
         cardLayout.show(mainContainerPanel, panelName);
     }
 }

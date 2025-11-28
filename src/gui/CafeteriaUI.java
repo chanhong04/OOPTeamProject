@@ -115,12 +115,18 @@ public class CafeteriaUI extends JPanel {
     }
 
     // 큰 카드형 버튼 + 아래 텍스트 라벨
+ // 큰 카드형 버튼 + 아래 텍스트 라벨
     private JButton makeCafeButton(String cmd, String labelText,
                                    int x, int y, String imageFile) {
         JButton b = new JButton();
         b.setBounds(x, y, 260, 180);
         b.setFocusPainted(false);
         b.setBorderPainted(false);
+
+        // 배경 흰색 (256,256,256 대신 255,255,255)
+        b.setBackground(new Color(255, 255, 255));  // 또는 Color.WHITE
+        b.setOpaque(true);
+        b.setContentAreaFilled(true);
 
         ImageIcon icon = loadScaledIcon(imageFile, 260, 180);
         if (icon != null) {
