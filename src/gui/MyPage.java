@@ -94,7 +94,7 @@ public class MyPage extends JPanel {
         b.setBorderPainted(false);
         b.setContentAreaFilled(false);
         
-        ImageIcon icon = loadScaledIcon(imageFile, 180, 180);
+        ImageIcon icon = loadScaledIcon(imageFile, 160, 160);
         if (icon != null) {
             b.setIcon(icon);
             b.setHorizontalAlignment(SwingConstants.CENTER);
