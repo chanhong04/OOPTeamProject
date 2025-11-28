@@ -170,7 +170,6 @@ public class ReviewManager extends DataEngineImpl<Review> {
         Review reviewToReport = find(reviewID);
 
         if (reviewToReport != null) {
-            reviewToReport.incrementWarning();
             saveReviews("reviews.txt");
             System.out.println("리뷰가 신고되었습니다. (현재 신고 획수: " + reviewToReport.getWarningNum() + "회)");
             return true;
